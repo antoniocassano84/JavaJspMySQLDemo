@@ -42,8 +42,6 @@ public class EmployeeController extends HttpServlet {
 		e.setDepartment(department);
 		if(employeeDao.save(e)) {
 			request.setAttribute("message", "Saved successfully");
-		} else {
-			System.out.println("Failing to save");
 		}
 	}
 
