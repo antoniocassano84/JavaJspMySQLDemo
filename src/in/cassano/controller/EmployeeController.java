@@ -16,6 +16,7 @@ import in.cassano.entity.Employee;
 
 public class EmployeeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	RequestDispatcher dispatcher = null;
 	private EmployeeDAO employeeDao = null;
        
     public EmployeeController() {
@@ -24,10 +25,18 @@ public class EmployeeController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-        List<Employee> theList = employeeDao.get();
-        request.setAttribute("list", theList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/employee-list.jsp");
-        dispatcher.forward(request, response);
+      String action = request.getParameter("action");
+      
+      if(action == null) { action = "LIST"; }
+      
+      switch(action) {
+      	case "LIST":
+      		listEmployees(request, response);
+      		break;
+      	default:
+      		listEmployees(request, response);
+      		break;
+      }
 	}
 
 	
@@ -43,6 +52,15 @@ public class EmployeeController extends HttpServlet {
 		if(employeeDao.save(e)) {
 			request.setAttribute("message", "Saved successfully");
 		}
+		listEmployees(request, response);
+	}
+	
+	public void listEmployees(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		  List<Employee> theList = employeeDao.get();
+	      request.setAttribute("list", theList);
+	      dispatcher = request.getRequestDispatcher("/views/employee-list.jsp");
+	      dispatcher.forward(request, response);
 	}
 
 }

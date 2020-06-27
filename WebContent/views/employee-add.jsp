@@ -10,8 +10,7 @@
 <body>
 
 	<div class="container">
-	    <p>${message}</p>
-		<form action="${pageContext.request.contextPath}/EmployeeController" method="post">
+		<form action="${pageContext.request.contextPath}/EmployeeController" method="POST">
 			Enter name: <input type="text" name="firstname"/><br/>
 	    	Enter date of birth: <input type="date" name="dob"/><br/>
         	Enter department: <input type="text" name="department"/><br/>

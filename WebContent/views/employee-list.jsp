@@ -14,6 +14,7 @@
 	    Add an employee
 	</button>
     <div class="container">
+      <p>${message}</p>
         <table border="1" class="table table-striped table-bordered">
       <tr class="thead-dark">
         <th>Name</th>
