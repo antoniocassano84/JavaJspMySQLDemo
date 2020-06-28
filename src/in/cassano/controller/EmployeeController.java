@@ -33,15 +33,21 @@ public class EmployeeController extends HttpServlet {
       	case "LIST":
       		listEmployees(request, response);
       		break;
+      	case "EDIT":
+      		getSingleEmployee(request, response);
+      		break;
+      	case "DELETE":
+      		deleteEmployee(request, response);
+      		break;
       	default:
       		listEmployees(request, response);
       		break;
       }
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String id = request.getParameter("id");
 		String name = request.getParameter("firstname");
 		String dob = request.getParameter("dob");
 		String department = request.getParameter("department");
@@ -49,9 +55,18 @@ public class EmployeeController extends HttpServlet {
 		e.setName(name);
 		e.setDob(dob);
 		e.setDepartment(department);
-		if(employeeDao.save(e)) {
-			request.setAttribute("message", "Saved successfully");
+		
+		if(id.isEmpty() || id==null) {
+			if(employeeDao.save(e)) {
+				request.setAttribute("message", "Saved successfully");
+			}
+		} else {
+			e.setId(Integer.parseInt(id));
+			if(employeeDao.update(e)) {
+				request.setAttribute("message", "Updated successfully");
+			}
 		}
+		
 		listEmployees(request, response);
 	}
 	
@@ -61,6 +76,24 @@ public class EmployeeController extends HttpServlet {
 	      request.setAttribute("list", theList);
 	      dispatcher = request.getRequestDispatcher("/views/employee-list.jsp");
 	      dispatcher.forward(request, response);
+	}
+	
+	private void getSingleEmployee(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String id = request.getParameter("id");
+		Employee employee = employeeDao.get(Integer.parseInt(id));
+		request.setAttribute("employee", employee);
+		dispatcher = request.getRequestDispatcher("/views/employee-add.jsp");
+	    dispatcher.forward(request, response);
+	}
+	
+	private void deleteEmployee(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String id = request.getParameter("id");
+		if(employeeDao.delete(Integer.parseInt(id))) {
+			request.setAttribute("message", "Deleted successfully!");
+		}
+		listEmployees(request, response);
 	}
 
 }

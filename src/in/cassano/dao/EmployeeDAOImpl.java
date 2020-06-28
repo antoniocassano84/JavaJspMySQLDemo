@@ -58,4 +58,53 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		return flag;
 	}
 
+	@Override
+	public Employee get(int id) {
+        Employee employee = null;
+		try {
+			employee = new Employee();
+			String sql = "SELECT * FROM tbl_employee WHERE id=" + id;
+			connection = DBConnectionUtil.openConnection();
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(sql);
+			while(resultSet.next()) {
+				employee.setId(resultSet.getInt("id"));
+				employee.setName(resultSet.getString("name"));
+				employee.setDob(resultSet.getString("dob"));
+				employee.setDepartment(resultSet.getString("department"));
+			}
+		} catch (SQLException e) { e.printStackTrace(); } 
+		System.out.println(employee);
+		return employee;
+	}
+
+	@Override
+	public boolean update(Employee employee) {
+		boolean flag = false;
+		try {
+			String sql = "UPDATE tbl_employee SET name='" + employee.getName() +
+						 "', dob='" + employee.getDob() + 
+						 "', department='" + employee.getDepartment() +
+						 "' where id=" + employee.getId();
+			connection = DBConnectionUtil.openConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.executeUpdate();
+			flag = true;
+		} catch (SQLException ex) { ex.printStackTrace(); }
+		return flag;
+	}
+
+	@Override
+	public boolean delete(int id) {
+		boolean flag = false;
+		try {
+			String sql = "DELETE FROM tbl_employee WHERE id=" + id;
+			connection = DBConnectionUtil.openConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.executeUpdate();
+			flag = true;
+		} catch (SQLException ex) { ex.printStackTrace(); }
+		return flag;
+	}
+
 }
